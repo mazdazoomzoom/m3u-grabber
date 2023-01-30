@@ -1,0 +1,4 @@
+*.m3u
+
+node_modules/
+.env
