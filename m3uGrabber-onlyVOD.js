@@ -3,6 +3,24 @@ const fs = require('fs');
 const helpers = require('./helpers');
 const fileName = 'vod.m3u';
 
+const getLineItems = async (file) => {
+	const lines = file.split('\n');
+	let items = [];
+
+	if (lines.length <= 1) return Promise.reject('File is empty.');
+
+	for (let i = 0; i < lines.length; i++) {
+		if (i == 0) continue;
+
+		let line = lines[i].toString();
+		if (line.startsWith('#EXTINF')) {
+			items.push(helpers.getAttribute('tvg-name', line));
+		}
+	}
+
+	return items;
+};
+
 const filterItems = (file) => {
 	const lines = file.split('\n');
 
@@ -63,9 +81,22 @@ const checkIfItemShouldBeRemoved = (item) => {
 
 const main = async () => {
 	try {
-		await helpers.downloadFile(process.env.M3U_URL, fileName);
+		await helpers.downloadFile(process.env.M3U_URL, `${fileName}`);
 		const data = fs.readFileSync(`./Download/${fileName}`, 'utf8');
 		const parsedFile = await filterItems(data);
+		const oldFile = fs.readFileSync(`./${fileName}`, 'utf8');
+
+		// Compare Items in ParseFile and OldFile
+		const oldItems = await getLineItems(oldFile);
+		const newItems = await getLineItems(parsedFile);
+
+		const newItemsToM3u = newItems.filter((item) => {
+			return !oldItems.includes(item);
+		});
+
+		console.log('New Items: ', newItemsToM3u);
+		fs.writeFileSync('./NewItemsInVODm3u.txt', newItemsToM3u.join('\n'));
+
 		fs.writeFileSync(`./${fileName}`, parsedFile);
 		fs.unlink(`./Download/${fileName}`, (err) => {
 			if (err) {

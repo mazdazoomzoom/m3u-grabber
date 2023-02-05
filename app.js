@@ -24,8 +24,16 @@ app.get('/tv', function (req, res) {
 	downloadFile(res, 'tv.m3u');
 });
 
+app.get('/all-tv', function (req, res) {
+	downloadFile(res, 'allTv.m3u');
+});
+
 app.get('/vod', function (req, res) {
 	downloadFile(res, 'vod.m3u');
+});
+
+app.get('/full', function (req, res) {
+	downloadFile(res, 'iptv.m3u');
 });
 
 // The app.listen() method binds and listens for connections on the specified host and port.
