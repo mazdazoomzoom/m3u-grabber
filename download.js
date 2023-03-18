@@ -40,7 +40,7 @@ const main = async () => {
 					await helpers.downloadFile(url, fileName);
 
 					// Move file to new location - /media/MediaShare/_newly_downloaded
-					let command = `mv "./Download/${fileName}" /media/MediaShare/_newly_downloaded/Download/`;
+					let command = `mv "./Download/${fileName}" /mypool/Media/_newly_downloaded/Download/`;
 					exec(command, (error, stdout, stderr) => {
 						if (error) {
 							console.log(`error: ${error.message}`);

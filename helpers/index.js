@@ -25,7 +25,7 @@ module.exports = {
 		const totalLength = headers['content-length'];
 
 		console.log(`Starting download of ${fileName} (${totalLength} bytes) ...`);
-		const progressBar = new ProgressBar('->  downloading [:bar] :rate/mbps :percent :etas', {
+		const progressBar = new ProgressBar('->  downloading [:bar] :rate/bps :percent :etas', {
 			width: 40,
 			complete: '=',
 			incomplete: ' ',
