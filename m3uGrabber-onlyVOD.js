@@ -1,4 +1,5 @@
 require('dotenv').config();
+const axios = require('axios');
 const fs = require('fs');
 const helpers = require('./helpers');
 const fileName = 'vod.m3u';
@@ -93,6 +94,21 @@ const main = async () => {
 		const newItemsToM3u = newItems.filter((item) => {
 			return !oldItems.includes(item);
 		});
+
+		// Send new items to Discord
+		// https://discord.com/api/webhooks/1087061290138214400/ReF1R2HEoqpOlaAKeODpliFlpu7D3tfP3eGqYbpidr-lOWvNiNh_4fxkjS3x8H0qFtLa
+		//
+
+		if (newItemsToM3u.length > 0) {
+			let params = {
+				username: "New M3U VOD's",
+				avatar_url: '',
+				content: 'Hi, I found some new VODs for you. Check them out!',
+			};
+			params.content += `\n\n${newItemsToM3u.join('\n')}`;
+
+			axios.post(process.env.DISCORD_WEBHOOK, params);
+		}
 
 		console.log('New Items: ', newItemsToM3u);
 		fs.writeFileSync('./NewItemsInVODm3u.txt', newItemsToM3u.join('\n'));

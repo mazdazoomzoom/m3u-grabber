@@ -1,4 +1,6 @@
 *.m3u
 
+Download/
+
 node_modules/
 .env
